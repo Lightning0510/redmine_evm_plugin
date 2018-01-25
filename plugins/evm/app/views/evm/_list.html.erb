@@ -1,0 +1,68 @@
+<%= form_tag({}) do -%>
+<%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+<div class="autoscroll">
+<table class="list issues <%= sort_css_classes %>">
+  <thead>
+    <tr>
+      <th class="checkbox hide-when-print">
+        <%= check_box_tag 'check_all', '', false, :class => 'toggle-selection',
+              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+      </th>
+      <% query.inline_columns.each do |column| %>
+        <%= column_header(column) %>
+      <% end %>
+      <th>BAC</th>
+      <th>PV</th>
+      <th>EV</th>
+      <th>AV</th>
+      <th>SV</th>
+      <th>CV</th>
+      <th>SPI</th>
+      <th>CPI</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% key_date, evm = @evmTotalHash.first %>
+  <% grouped_issue_list(issues, @query, @issue_count_by_group) do |issue, level, group_name, group_count, group_totals| -%>
+  <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
+    <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
+    <%= raw query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
+    <td class="subject"><%=@list_evm[issue.id].bac %></td>
+    <td class="subject"><%=@list_evm[issue.id].pv %></td>
+    <td class="subject"><%=@list_evm[issue.id].ev %></td>
+    <td class="subject"><%=@list_evm[issue.id].av %></td>
+    <td class="subject"><%=@list_evm[issue.id].sv %></td>
+    <td class="subject"><%=@list_evm[issue.id].cv %></td>
+    <td class="subject"><%=@list_evm[issue.id].spi %></td>
+    <td class="subject"><%=@list_evm[issue.id].cpi %></td>
+  </tr>
+  <% @query.block_columns.each do |column|
+       if (text = column_content(column, issue)) && text.present? -%>
+  <tr class="<%= current_cycle %>">
+    <td colspan="<%= @query.inline_columns.size + 1 %>" class="<%= column.css_classes %>"><%= text %></td>
+  </tr>
+  <% end -%>
+  <% end -%>
+  <% end -%>
+  <tr class="hascontextmenu <%= cycle('odd', 'even') %> <%= @issues.first.css_classes %>">
+    <td class=""></td>
+    <td class=""></td>
+    <td class=""></td>
+    <td class=""></td>
+    <td class=""></td>
+    <td class=""></td>
+    <td class="">Total</td>
+    <td class=""></td>
+    <td class="subject"><%= evm['bac'] %></td>
+    <td class="subject"><%= evm['pv'] %></td>
+    <td class="subject"><%= evm['ev'] %></td>
+    <td class="subject"><%= evm['av'] %></td>
+    <td class="subject"><%= evm['sv'] %></td>
+    <td class="subject"><%= evm['cv'] %></td>
+    <td class="subject"><%= evm['spi'] %></td>
+    <td class="subject"><%= evm['cpi'] %></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+<% end -%>
