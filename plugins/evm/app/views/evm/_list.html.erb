@@ -27,14 +27,14 @@
   <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
     <%= raw query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
-    <td class="subject"><%=@list_evm[issue.id].bac %></td>
-    <td class="subject"><%=@list_evm[issue.id].pv %></td>
-    <td class="subject"><%=@list_evm[issue.id].ev %></td>
-    <td class="subject"><%=@list_evm[issue.id].av %></td>
-    <td class="subject"><%=@list_evm[issue.id].sv %></td>
-    <td class="subject"><%=@list_evm[issue.id].cv %></td>
-    <td class="subject"><%=@list_evm[issue.id].spi %></td>
-    <td class="subject"><%=@list_evm[issue.id].cpi %></td>
+    <td class="tracker"><%=@list_evm[issue.id].bac %></td>
+    <td class="tracker"><%=@list_evm[issue.id].pv %></td>
+    <td class="tracker"><%=@list_evm[issue.id].ev %></td>
+    <td class="tracker"><%=@list_evm[issue.id].av %></td>
+    <td class="tracker"><%=@list_evm[issue.id].sv %></td>
+    <td class="tracker"><%=@list_evm[issue.id].cv %></td>
+    <td class="tracker"><%=@list_evm[issue.id].spi %></td>
+    <td class="tracker"><%=@list_evm[issue.id].cpi %></td>
   </tr>
   <% @query.block_columns.each do |column|
        if (text = column_content(column, issue)) && text.present? -%>
@@ -53,14 +53,14 @@
     <td class=""></td>
     <td class="">Total</td>
     <td class=""></td>
-    <td class="subject"><%= evm['bac'] %></td>
-    <td class="subject"><%= evm['pv'] %></td>
-    <td class="subject"><%= evm['ev'] %></td>
-    <td class="subject"><%= evm['av'] %></td>
-    <td class="subject"><%= evm['sv'] %></td>
-    <td class="subject"><%= evm['cv'] %></td>
-    <td class="subject"><%= evm['spi'] %></td>
-    <td class="subject"><%= evm['cpi'] %></td>
+    <td class="tracker"><%= evm['bac'] %></td>
+    <td class="tracker"><%= evm['pv'] %></td>
+    <td class="tracker"><%= evm['ev'] %></td>
+    <td class="tracker"><%= evm['av'] %></td>
+    <td class="tracker"><%= evm['sv'] %></td>
+    <td class="tracker"><%= evm['cv'] %></td>
+    <td class="tracker"><%= evm['spi'] %></td>
+    <td class="tracker"><%= evm['cpi'] %></td>
   </tr>
   </tbody>
 </table>

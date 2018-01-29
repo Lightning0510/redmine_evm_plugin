@@ -17,7 +17,7 @@ class EvmCalculator
         #Calculated base on today
 
         if ((!issue.due_date.blank? && !issue.estimated_hours.blank?))
-            @pv = calculate_planed_value(issue.start_date, issue.due_date, Date.today, issue.estimated_hours)
+            @pv = calculate_planed_value(issue.start_date, issue.due_date, Date.yesterday, issue.estimated_hours)
             @pv = @pv.round(1)
         else
             @pv = NOT_AVAILABLE
@@ -45,7 +45,7 @@ class EvmCalculator
         @cv = metric_round(@cv, 1)
 
         @bac = issue.estimated_hours
-        @cal_date = Date.today
+        @cal_date = Date.yesterday
         @issue_id = issue.id
     end
     
