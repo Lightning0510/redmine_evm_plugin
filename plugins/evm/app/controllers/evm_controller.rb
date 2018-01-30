@@ -33,7 +33,10 @@ class EvmController < ApplicationController
           parent_id_list.push(issue.parent_id)
         end
 
-        @issue_count = @query.issue_count - @parent_issues.length
+        @total_issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+                                :conditions => ['issues.id NOT IN (?) ', parent_id_list])
+
+        @issue_count = @total_issues.length
         @issue_pages = Paginator.new @issue_count, @limit, params['page']
         @offset ||= @issue_pages.offset
         @issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
@@ -44,16 +47,13 @@ class EvmController < ApplicationController
         
         @issue_count_by_group = @query.issue_count_by_group
 
-        @total_issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
-                                :conditions => ['issues.id NOT IN (?) ', parent_id_list])
-
         @list_evm = {}
         @total_issues.each do |issue|
           @list_evm[issue.id] = EvmCalculator.new(issue)
         end
 
         @evmTotalHash = EvmCalculator.calculate_total(@list_evm, Date.yesterday)
-        Rails.logger.debug("My object: #{Date.today.inspect}")
+        Rails.logger.debug("My object: #{@issue_count_by_group.inspect}")
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
         end
