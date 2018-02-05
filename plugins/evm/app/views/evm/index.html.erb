@@ -1,7 +1,10 @@
 
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'evm', :plugin => 'evm' %>
+<% end %>
+
 <h2>EVM</h2>
 <% html_title("EVM") %>
-
 <%= form_tag({ :controller => 'evm', :action => 'index', :project_id => @project },
             :method => :get, :id => 'query_form') do %>
   <div id="query_form_with_buttons" class="hide-when-print">

@@ -53,7 +53,7 @@ class EvmController < ApplicationController
         end
 
         @evmTotalHash = EvmCalculator.calculate_total(@list_evm, Date.yesterday)
-        Rails.logger.debug("My object: #{@issue_count_by_group.inspect}")
+        Rails.logger.debug("My object: #{@parent_issues.to_a.inspect}")
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
         end

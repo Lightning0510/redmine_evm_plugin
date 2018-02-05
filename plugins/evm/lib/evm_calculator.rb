@@ -2,7 +2,7 @@ class EvmCalculator
     # def get_issues(project_id)
     #     @current_project = Project.find(project_id)
     #     @root_project = Issue.select(:parent_id).distinct.where('parent_id IS NOT NULL AND project_id=?', @current_project.id)
-    #     if(@root_project.blank?) 
+    #     if(@root_project.blank?)
     #         @issues = Issue.where.not(parent_id: @root_project.to_a)
     #     end
     # end
@@ -10,7 +10,7 @@ class EvmCalculator
 
     attr_accessor :issue_id, :pv, :ev, :av, :cpi, :spi, :sv, :cv, :bac, :cal_date
 
-    NOT_AVAILABLE = "N/a"
+    NOT_AVAILABLE = "N/A"
 
     #initial
     def initialize(issue)
@@ -31,7 +31,7 @@ class EvmCalculator
         end
 
         @av = issue.spent_hours
-        
+
         @cpi = calculate_cpi(@ev,@av)
         @cpi = metric_round(@cpi, 1)
 
@@ -48,7 +48,7 @@ class EvmCalculator
         @cal_date = Date.yesterday
         @issue_id = issue.id
     end
-    
+
     # working_day
     # @param [date] start_date
     # @param [date] due_date
@@ -69,10 +69,10 @@ class EvmCalculator
         working_days_length = working_days(start_date, end_date).length
         calculate_date_length = working_days(start_date, calculate_date).length
         pv = calculate_date_length.to_f/working_days_length * estimated_hours
-        
+
         return pv
     end
-    
+
     # EV
     # @param [integer] done_ratio (0-100)
     # @param [float] estimated hours
@@ -106,7 +106,7 @@ class EvmCalculator
         return cv
     end
 
-    # Total EVM 
+    # Total EVM
     # @param [Arr of EvmCalculator] evmList
     # @param [date] calDate key of the hash
     # @return [hash] evmHash {caldate=> {'bac'=>bac, 'pv'=>pv, 'ev'=>ev, 'cv'=>cv} }
@@ -121,9 +121,9 @@ class EvmCalculator
 
         cpi = (ev == NOT_AVAILABLE || av <= 0.0) ? NOT_AVAILABLE : ev/av
         spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev/pv
-        sv = (ev == NOT_AVAILABLE || @pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev - pv
+        sv = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev - pv
         cv = ev == NOT_AVAILABLE ? NOT_AVAILABLE : ev - av
-        
+
         pv = metric_round(pv, 1)
         ev = metric_round(ev, 1)
         av = metric_round(av, 1)
@@ -149,4 +149,4 @@ class EvmCalculator
         metric = (metric != NOT_AVAILABLE) ? metric.round(numberDigit) : metric
         return metric
     end
-end 
+end
