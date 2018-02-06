@@ -7,7 +7,7 @@ class EvmController < ApplicationController
 
   helper :issues
   helper :projects
-
+  helper :attachments
   helper :queries
   include QueriesHelper
   helper :repositories
@@ -20,13 +20,21 @@ class EvmController < ApplicationController
       sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
       sort_update(@query.sortable_columns)
       @query.sort_criteria = sort_criteria.to_a
-      
+
       @project = Project.find(params[:project_id])
-      
+
       # Rails.logger.debug("My object: #{@evmHash.inspect}")
       if @query.valid?
-        @limit = per_page_option
-  
+        case params[:format]
+        when 'csv', 'pdf'
+          @limit = Setting.issues_export_limit.to_i
+          if params[:columns] == 'all'
+            @query.column_names = @query.available_inline_columns.map(&:name)
+          end
+        else
+          @limit = per_page_option
+        end
+
         @parent_issues = Issue.select(:parent_id).distinct.where('parent_id IS NOT NULL AND project_id=?', @project.id)
         parent_id_list = [-1]
         @parent_issues.each do |issue|
@@ -44,7 +52,7 @@ class EvmController < ApplicationController
                                 :offset => @offset,
                                 :limit => @limit,
                                 :conditions => ['issues.id NOT IN (?) ', parent_id_list])
-        
+
         @issue_count_by_group = @query.issue_count_by_group
 
         @list_evm = {}
@@ -53,9 +61,16 @@ class EvmController < ApplicationController
         end
 
         @evmTotalHash = EvmCalculator.calculate_total(@list_evm, Date.yesterday)
-        Rails.logger.debug("My object: #{@parent_issues.to_a.inspect}")
+        # @test_issues = @issues
+        # @test_issues.each do |issue|
+        #   Rails.logger.debug("My object: #{issue.inspect}")
+        # end
+        # Rails.logger.debug("My object: #{@issues.inspect}")
+
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
+          format.csv  { send_data(query_to_csv(@issues, @query, params[:csv]), :type => 'text/csv; header=present', :filename => 'issues.csv') }
+          format.pdf  { send_file_headers! :type => 'application/pdf', :filename => 'issues.pdf' }
         end
       else
         respond_to do |format|

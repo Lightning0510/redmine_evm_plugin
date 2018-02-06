@@ -7,7 +7,7 @@ class EvmCalculatorTest < ActiveSupport::TestCase
     #     @issues = EvmCalculator.new()
     #     Rails::logger.debug @issues.inspect
     # end
-    setup do 
+    setup do
         @sample_issues = Issue.find(1)
         @evmSampleIssue = EvmCalculator.new(@sample_issues)
 
@@ -34,9 +34,9 @@ class EvmCalculatorTest < ActiveSupport::TestCase
 
         assert(working_days.length <= 10 && working_days.length >=1)
 
-        #no due date and estimated hours    
-        
-        assert_equal @evmNoDueDateIssue.pv, "N/a"
+        #no due date and estimated hours
+
+        assert_equal @evmNoDueDateIssue.pv, "N/A"
 
         # Rails::logger.debug @evmNoDueDateIssue.pv.inspect
     end
@@ -44,37 +44,37 @@ class EvmCalculatorTest < ActiveSupport::TestCase
     def test_calculate_planed_value
         # 5 days working time
         evm1 = @evmSampleIssue.calculate_planed_value(
-            DateTime.parse("Mon, 22 Jan 2018"), 
-            DateTime.parse("Fri, 26 Jan 2018"), 
-            DateTime.parse("27 Jan 2018"), 
+            DateTime.parse("Mon, 22 Jan 2018"),
+            DateTime.parse("Fri, 26 Jan 2018"),
+            DateTime.parse("27 Jan 2018"),
             25.0)
-        
-        # 3 days working time    
+
+        # 3 days working time
         evm2 = @evmSampleIssue.calculate_planed_value(
-            DateTime.parse("5 Jan 2018"), 
-            DateTime.parse("9 Jan 2018"), 
-            DateTime.parse("7 Jan 2018"), 
+            DateTime.parse("5 Jan 2018"),
+            DateTime.parse("9 Jan 2018"),
+            DateTime.parse("7 Jan 2018"),
             15.0)
 
-        # 0 days working time    
+        # 0 days working time
         evm3 = @evmSampleIssue.calculate_planed_value(
-            DateTime.parse("5 Jan 2018"), 
-            DateTime.parse("19 Jan 2018"), 
-            DateTime.parse("3 Jan 2018"), 
+            DateTime.parse("5 Jan 2018"),
+            DateTime.parse("19 Jan 2018"),
+            DateTime.parse("3 Jan 2018"),
             15.0)
 
-        # 0 working time    
+        # 0 working time
         evm4 = @evmSampleIssue.calculate_planed_value(
-            DateTime.parse("5 Jan 2018"), 
-            DateTime.parse("19 Jan 2018"), 
-            DateTime.parse("3 Jan 2018"), 
+            DateTime.parse("5 Jan 2018"),
+            DateTime.parse("19 Jan 2018"),
+            DateTime.parse("3 Jan 2018"),
             0.0)
-        
+
         assert_equal evm1, 25.0*5/5
         assert_equal evm2, 15.0*1/3
         assert_equal evm3, 0.0
         assert_equal evm4, 0.0
-        assert_equal @evmNoDueDateIssue.ev, "N/a"
+        assert_equal @evmNoDueDateIssue.ev, "N/A"
 
         # Rails::logger.debug @evmSampleIssue.av.inspect
     end

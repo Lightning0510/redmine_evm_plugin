@@ -13,22 +13,30 @@ class EvmCalculator
     NOT_AVAILABLE = "N/A"
 
     #initial
-    def initialize(issue)
+    def initialize(issue, options = {})
         #Calculated base on today
 
+        @bac = issue.estimated_hours
+        @cal_date = !options[:cal_date] ? Date.yesterday : options[:cal_date]
+
         if ((!issue.due_date.blank? && !issue.estimated_hours.blank?))
-            @pv = calculate_planed_value(issue.start_date, issue.due_date, Date.yesterday, issue.estimated_hours)
-            @pv = @pv.round(1)
+            if (@cal_date < issue.due_date )
+              @pv = calculate_planed_value(issue.start_date, issue.due_date, @cal_date, issue.estimated_hours)
+            else
+              @pv = @bac
+            end
         else
             @pv = NOT_AVAILABLE
         end
 
         if(!issue.estimated_hours.blank? && !issue.done_ratio.blank?)
             @ev = calculate_earned_value(issue.done_ratio, issue.estimated_hours)
-            @ev = @ev.round(1)
         else
             @ev = NOT_AVAILABLE
         end
+
+        @pv = metric_round(@pv, 1)
+        @ev = metric_round(@ev, 1)
 
         @av = issue.spent_hours
 
@@ -44,8 +52,6 @@ class EvmCalculator
         @cv = calculate_cv(@ev,@av)
         @cv = metric_round(@cv, 1)
 
-        @bac = issue.estimated_hours
-        @cal_date = Date.yesterday
         @issue_id = issue.id
     end
 
@@ -124,6 +130,7 @@ class EvmCalculator
         sv = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev - pv
         cv = ev == NOT_AVAILABLE ? NOT_AVAILABLE : ev - av
 
+        bac = metric_round(bac, 1)
         pv = metric_round(pv, 1)
         ev = metric_round(ev, 1)
         av = metric_round(av, 1)
