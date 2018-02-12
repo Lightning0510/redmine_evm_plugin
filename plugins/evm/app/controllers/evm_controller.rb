@@ -13,6 +13,7 @@ class EvmController < ApplicationController
   helper :repositories
   helper :sort
   include SortHelper
+  include EvmHelper
 
   def index
       retrieve_query
@@ -59,7 +60,6 @@ class EvmController < ApplicationController
         @total_issues.each do |issue|
           @list_evm[issue.id] = EvmCalculator.new(issue)
         end
-
         @evmTotalHash = EvmCalculator.calculate_total(@list_evm, Date.yesterday)
         # @test_issues = @issues
         # @test_issues.each do |issue|
@@ -69,8 +69,8 @@ class EvmController < ApplicationController
 
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
-          format.csv  { send_data(query_to_csv(@issues, @query, params[:csv]), :type => 'text/csv; header=present', :filename => 'issues.csv') }
-          format.pdf  { send_file_headers! :type => 'application/pdf', :filename => 'issues.pdf' }
+          format.csv  { send_data(evm_to_csv(@issues, @query, @list_evm, @evmTotalHash, params[:csv]), :type => 'text/csv; header=present', :filename => 'evm.csv') }
+          format.pdf  { send_file_headers! :type => 'application/pdf', :filename => 'evm.pdf' }
         end
       else
         respond_to do |format|

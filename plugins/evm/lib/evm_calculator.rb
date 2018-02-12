@@ -17,6 +17,8 @@ class EvmCalculator
         #Calculated base on today
 
         @bac = issue.estimated_hours
+        @bac = @bac.nil? ? NOT_AVAILABLE : @bac
+
         @cal_date = !options[:cal_date] ? Date.yesterday : options[:cal_date]
 
         if ((!issue.due_date.blank? && !issue.estimated_hours.blank?))
@@ -39,6 +41,7 @@ class EvmCalculator
         @ev = metric_round(@ev, 1)
 
         @av = issue.spent_hours
+        @av = metric_round(@av, 1)
 
         @cpi = calculate_cpi(@ev,@av)
         @cpi = metric_round(@cpi, 1)
@@ -119,7 +122,7 @@ class EvmCalculator
     def self.calculate_total(evmHash, calDate)
         bac = pv = ev = av = 0.0
         evmHash.each do |key, evm|
-            bac = (evm.bac != nil) ? (bac + evm.bac) : bac
+            bac = (evm.bac != NOT_AVAILABLE) ? (bac + evm.bac) : bac
             pv = (evm.pv != NOT_AVAILABLE) ? (pv + evm.pv) : pv
             ev = (evm.ev != NOT_AVAILABLE) ? (ev + evm.ev) : ev
             av = (evm.av != NOT_AVAILABLE) ? (av + evm.av) : av
@@ -155,5 +158,11 @@ class EvmCalculator
     def metric_round(metric, numberDigit)
         metric = (metric != NOT_AVAILABLE) ? metric.round(numberDigit) : metric
         return metric
+    end
+
+    #to_csv_content
+    def self.to_csv_content(evm)
+      csv_content = [evm.bac, evm.pv, evm.ev, evm.av, evm.sv, evm.cv, evm.spi, evm.cpi]
+      return csv_content
     end
 end
