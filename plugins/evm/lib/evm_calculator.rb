@@ -99,7 +99,7 @@ class EvmCalculator
 
     # SPI
     def calculate_spi(ev,pv)
-        spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev/pv
+        spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE || pv <= 0.0) ? NOT_AVAILABLE : ev/pv
         return spi
     end
 
@@ -129,7 +129,7 @@ class EvmCalculator
         end
 
         cpi = (ev == NOT_AVAILABLE || av <= 0.0) ? NOT_AVAILABLE : ev/av
-        spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev/pv
+        spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE || pv <= 0.0) ? NOT_AVAILABLE : ev/pv
         sv = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE) ? NOT_AVAILABLE : ev - pv
         cv = ev == NOT_AVAILABLE ? NOT_AVAILABLE : ev - av
 
@@ -143,7 +143,7 @@ class EvmCalculator
         cv = metric_round(cv, 1)
 
         evmTotalHash = {}
-        evmTotalHash[calDate] = {'bac'=>bac, 'pv'=>pv, 'ev'=>ev, 'av'=>av, 'cpi' => cpi, 'spi'=>spi, 'sv'=>sv, 'cv'=>cv}
+        evmTotalHash[calDate] = {'bac'=>bac, 'pv'=>pv, 'ev'=>ev, 'av'=>av, 'sv'=>sv, 'cv'=>cv, 'spi'=>spi, 'cpi' => cpi}
 
         return evmTotalHash
     end
