@@ -33,8 +33,8 @@
     <td class="tracker"><%=@list_evm[issue.id].av %></td>
     <td class="tracker"><%=@list_evm[issue.id].sv %></td>
     <td class="tracker"><%=@list_evm[issue.id].cv %></td>
-    <td class="<%= (@list_evm[issue.id].spi.to_f < 0.8) ? 'red tracker' : 'tracker' %>"><%=@list_evm[issue.id].spi %></td>
-    <td class="<%= (@list_evm[issue.id].cpi.to_f < 0.8) ? 'red tracker' : 'tracker' %>"><%=@list_evm[issue.id].cpi %></td>
+    <td class="<%= (@list_evm[issue.id].spi.to_f < 0.8 && !(@list_evm[issue.id].spi == 'N/A')) ? 'red tracker' : 'tracker' %>"><%=@list_evm[issue.id].spi %></td>
+    <td class="<%= (@list_evm[issue.id].cpi.to_f < 0.8 && !(@list_evm[issue.id].cpi == 'N/A')) ? 'red tracker' : 'tracker' %>"><%=@list_evm[issue.id].cpi %></td>
   </tr>
   <% @query.block_columns.each do |column|
        if (text = column_content(column, issue)) && text.present? -%>
@@ -59,8 +59,8 @@
     <td class="tracker bold"><%= evm['av'] %></td>
     <td class="tracker bold"><%= evm['sv'] %></td>
     <td class="tracker bold"><%= evm['cv'] %></td>
-    <td class="<%= (evm['spi'].to_f < 0.8) ? 'red tracker bold' : 'tracker bold' %>"><%= evm['spi'] %></td>
-    <td class="<%= (evm['cpi'].to_f < 0.8) ? 'red tracker bold' : 'tracker bold' %>"><%= evm['cpi'] %></td>
+    <td class="<%= ((evm['spi'].to_f < 0.8) && !(evm['spi'] == 'N/A')) ? 'red tracker bold' : 'tracker bold' %>"><%= evm['spi'] %></td>
+    <td class="<%= ((evm['cpi'].to_f < 0.8) && !(evm['cpi'] == 'N/A')) ? 'red tracker bold' : 'tracker bold' %>"><%= evm['cpi'] %></td>
   </tr>
   </tbody>
 </table>
