@@ -24,7 +24,7 @@ class EvmController < ApplicationController
 
       @project = Project.find(params[:project_id])
 
-      # Rails.logger.debug("My object: #{@evmHash.inspect}")
+      # Rails.logger.debug("My object: #{session[:query].inspect}")
       if @query.valid?
         case params[:format]
         when 'csv', 'pdf'
@@ -70,7 +70,6 @@ class EvmController < ApplicationController
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
           format.csv  { send_data(evm_to_csv(@issues, @query, @list_evm, @evmTotalHash, params[:csv]), :type => 'text/csv; header=present', :filename => 'evm.csv') }
-          format.pdf  { send_file_headers! :type => 'application/pdf', :filename => 'evm.pdf' }
         end
       else
         respond_to do |format|
