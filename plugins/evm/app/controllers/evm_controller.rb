@@ -69,6 +69,9 @@ class EvmController < ApplicationController
 
         respond_to do |format|
           format.html { render :file => 'plugins/evm/app/views/evm/index.html.erb', :layout => !request.xhr? }
+          format.api  {
+            Issue.load_visible_relations(@issues) if include_in_api_response?('relations')
+          }
           format.csv  { send_data(evm_to_csv(@issues, @query, @list_evm, @evmTotalHash, params[:csv]), :type => 'text/csv; header=present', :filename => 'evm.csv') }
         end
       else

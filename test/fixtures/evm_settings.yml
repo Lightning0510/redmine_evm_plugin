@@ -3,3 +3,23 @@ settings_001:
   id: 1
   project_id: 1
   save_histories: 1
+settings_002:
+  id: 2
+  project_id: 2
+  save_histories: 1
+settings_003:
+  id: 3
+  project_id: 3
+  save_histories: 0
+settings_004:
+  id: 4
+  project_id: 4
+  save_histories: 1
+settings_005:
+  id: 5
+  project_id: 5
+  save_histories: 0
+settings_006:
+  id: 6
+  project_id: 6
+  save_histories: 1
