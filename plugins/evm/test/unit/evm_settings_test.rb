@@ -8,4 +8,13 @@ class EvmSettingsTest < ActiveSupport::TestCase
     projects = EvmSettings.getScheduledEVMProjectsList()
     Rails.logger.debug("My object: #{projects.inspect}")
   end
+
+  def test_turnOffSaveHistories
+    EvmSettings.turnOffSaveHistories(1)
+    Rails.logger.debug("My object: #{EvmSettings.where(project_id: 1).inspect}")
+    EvmSettings.turnOnSaveHistories(1)
+    Rails.logger.debug("My object: #{EvmSettings.where(project_id: 1).inspect}")
+    EvmSettings.turnOnSaveHistories(100)
+    Rails.logger.debug("My object: #{EvmSettings.where(project_id: 100).inspect}")
+  end
 end

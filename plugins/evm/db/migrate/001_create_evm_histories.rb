@@ -4,6 +4,8 @@ class CreateEvmHistories < ActiveRecord::Migration
 
       t.integer :project_id
 
+      t.float :bac
+
       t.float :pv
 
       t.float :ev
