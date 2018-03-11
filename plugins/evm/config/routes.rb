@@ -5,4 +5,5 @@
 
 resources :projects do
     resources :evm
+    resources :evm_histories
 end

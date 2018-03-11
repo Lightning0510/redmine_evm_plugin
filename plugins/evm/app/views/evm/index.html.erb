@@ -77,7 +77,7 @@
 <% other_formats_links do |f| %>
   <%= f.link_to 'CSV', :url => params, :onclick => "showModal('csv-export-options', '350px'); return false;" %>
 <% end %>
-
+<%= link_to "Chart", {:controller => :evm_histories, :action => :index} %>
 <div id="csv-export-options" style="display:none;">
   <h3 class="title"><%= l(:label_export_options, :export_format => 'CSV') %></h3>
   <%= form_tag('evm.csv', :method => :get, :id => 'csv-export-form') do %>

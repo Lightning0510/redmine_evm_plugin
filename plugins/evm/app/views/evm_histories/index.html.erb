@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Highcharts Example</title>
+        
+        <%= stylesheet_link_tag 'highcharts', :plugin => 'evm' %>
+		<style type="text/css">
+#container {
+	min-width: 310px;
+	max-width: 800px;
+	height: 400px;
+	margin: 0 auto
+}
+		</style>
+	</head>
+	<body>
+            
+<%= javascript_include_tag 'highcharts', :plugin => 'evm' %>
+<%= javascript_include_tag 'modules/series-label', :plugin => 'evm' %>
+<%= javascript_include_tag 'modules/exporting', :plugin => 'evm' %>
+<div id="container"></div>
+
+
+
+		<script type="text/javascript">
+var chartPoints = <%= @chartPoints.to_json.html_safe %>
+Highcharts.chart('container', {
+
+    title: {
+        text: 'Earned value management'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Hours'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 0
+        }
+    },
+
+    series: [{
+        name: 'BAC',
+        data: chartPoints['bac']
+    }, {
+        name: 'PV',
+        data: chartPoints['pv']
+    }, {
+        name: 'EV',
+        data: chartPoints['ev']
+    }, {
+        name: 'AV',
+        data: chartPoints['av']
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+		</script>
+	</body>
+</html>
