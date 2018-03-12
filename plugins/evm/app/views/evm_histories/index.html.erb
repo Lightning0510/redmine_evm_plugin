@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Highcharts Example</title>
-        
+
         <%= stylesheet_link_tag 'highcharts', :plugin => 'evm' %>
 		<style type="text/css">
 #container {
@@ -16,7 +16,7 @@
 		</style>
 	</head>
 	<body>
-            
+
 <%= javascript_include_tag 'highcharts', :plugin => 'evm' %>
 <%= javascript_include_tag 'modules/series-label', :plugin => 'evm' %>
 <%= javascript_include_tag 'modules/exporting', :plugin => 'evm' %>
@@ -31,7 +31,12 @@ Highcharts.chart('container', {
     title: {
         text: 'Earned value management'
     },
-
+		xAxis: {
+        title: {
+            text: 'Weeks'
+        },
+				tickInterval: 1
+    },
     yAxis: {
         title: {
             text: 'Hours'

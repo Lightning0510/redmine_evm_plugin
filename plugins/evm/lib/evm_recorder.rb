@@ -1,4 +1,8 @@
 class EvmRecorder
+
+  CALCULATE_DAY = Date.today - 1
+  VALIDATE_CALCULATE_DAY_RANGE = 30
+
   def self.saveEvmHistories
     settingProjectList = Project.all()
     Rails.logger.debug("projectList: #{settingProjectList.length().inspect}")
@@ -21,22 +25,25 @@ class EvmRecorder
         end
       end
 
+      project_id = project.id
       Rails.logger.debug("project: #{project.inspect}")
+      Rails.logger.debug("project: #{CALCULATE_DAY.inspect}")
       issue_with_last_due_date = Issue.where('project_id=?', project).order('due_date DESC').first
-      if !issue_with_last_due_date.nil?
+      if !issue_with_last_due_date.blank?
         project_due_date = issue_with_last_due_date.due_date
-        Rails.logger.debug("start date: #{project.start_date.inspect}")
+        project_start_date = project.start_date
+        Rails.logger.debug("start date: #{project_start_date.inspect}")
         Rails.logger.debug("due date: #{project_due_date.inspect}")
 
-        if(!project_due_date.nil? || !project_due_date.blank?)
-          if ((project_due_date - Date.yesterday).to_i <= 6 || Date.yesterday < project_due_date)
+        if(!project_due_date.blank? && !project_start_date.blank?)
+          if ((project_due_date - CALCULATE_DAY).to_i <= VALIDATE_CALCULATE_DAY_RANGE || (CALCULATE_DAY <= project_due_date && CALCULATE_DAY >= project_start_date))
             list_evm = {}
             total_issues.each do |issue|
               list_evm[issue.id] = EvmCalculator.new(issue)
             end
 
-            evm = EvmCalculator.calculate_total(list_evm, Date.yesterday)
-            EvmHistories.saveFromEvmTotalHash(evm, project)
+            evm = EvmCalculator.calculate_total(list_evm, CALCULATE_DAY)
+            EvmHistories.saveFromEvmTotalHash(evm, project_id)
 
             Rails.logger.debug("My object: #{evm.inspect}")
           end

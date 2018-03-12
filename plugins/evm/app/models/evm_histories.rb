@@ -26,7 +26,7 @@ class EvmHistories < ActiveRecord::Base
     pvPoints = []
     evPoints = []
     avPoints = []
-    
+
     evmHistories.each do |evm|
       bacPoints.push(evm.bac)
       pvPoints.push(evm.pv)
