@@ -28,15 +28,16 @@ class EvmRecorder
       project_id = project.id
       Rails.logger.debug("project: #{project.inspect}")
       Rails.logger.debug("project: #{CALCULATE_DAY.inspect}")
-      issue_with_last_due_date = Issue.where('project_id=?', project).order('due_date DESC').first
+      issue_with_last_due_date = Issue.where('project_id=?', project).maximum('due_date')
+
       if !issue_with_last_due_date.blank?
-        project_due_date = issue_with_last_due_date.due_date
+        project_due_date = issue_with_last_due_date
         project_start_date = project.start_date
         Rails.logger.debug("start date: #{project_start_date.inspect}")
         Rails.logger.debug("due date: #{project_due_date.inspect}")
 
         if(!project_due_date.blank? && !project_start_date.blank?)
-          if ((project_due_date - CALCULATE_DAY).to_i <= VALIDATE_CALCULATE_DAY_RANGE || (CALCULATE_DAY <= project_due_date && CALCULATE_DAY >= project_start_date))
+          if (CALCULATE_DAY <= (project_due_date + VALIDATE_CALCULATE_DAY_RANGE) && CALCULATE_DAY >= project_start_date)
             list_evm = {}
             total_issues.each do |issue|
               list_evm[issue.id] = EvmCalculator.new(issue)

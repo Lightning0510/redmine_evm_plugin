@@ -1,7 +1,7 @@
 desc <<-END_DESC
-Check for and assign periodic tasks
+Check for and assign save_histories tasks
 Example:
-  rake redmine:check_periodictasks RAILS_ENV="production"
+  rake redmine:plugins:save_histories RAILS_ENV="production"
 END_DESC
 require File.expand_path(File.dirname(__FILE__) + "/../../../../config/environment")
 

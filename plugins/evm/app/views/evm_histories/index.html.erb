@@ -10,8 +10,12 @@
 #container {
 	min-width: 310px;
 	max-width: 800px;
-	height: 400px;
+	height: auto;
 	margin: 0 auto
+}
+
+#spacer{
+	height: 20px
 }
 		</style>
 	</head>
@@ -20,26 +24,35 @@
 <%= javascript_include_tag 'highcharts', :plugin => 'evm' %>
 <%= javascript_include_tag 'modules/series-label', :plugin => 'evm' %>
 <%= javascript_include_tag 'modules/exporting', :plugin => 'evm' %>
-<div id="container"></div>
+<div id="container">
+	<div id="chart-A"></div>
+	<div id="spacer"></div>
+	<div id="chart-B"></div>
+</div>
 
 
 
 		<script type="text/javascript">
 var chartPoints = <%= @chartPoints.to_json.html_safe %>
-Highcharts.chart('container', {
+Highcharts.chart('chart-A', {
 
     title: {
-        text: 'Earned value management'
+        text: 'EVM History'
     },
 		xAxis: {
-        title: {
-            text: 'Weeks'
-        },
-				tickInterval: 1
+            title: {
+                text: 'Weeks'
+            },
+            labels: {
+                rotation: -45
+            },
+			tickInterval: 1,
+            categories: chartPoints['date'],
+            rotation: -90
     },
     yAxis: {
         title: {
-            text: 'Hours'
+            text: 'Man-Hours'
         }
     },
     legend: {
@@ -69,6 +82,67 @@ Highcharts.chart('container', {
     }, {
         name: 'AV',
         data: chartPoints['av']
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+
+Highcharts.chart('chart-B', {
+
+    title: {
+        text: 'SPI, CPI'
+    },
+		xAxis: {
+            title: {
+                text: 'Weeks'
+            },
+            labels: {
+                rotation: -45
+            },
+			tickInterval: 1,
+            categories: chartPoints['date'],
+            rotation: -90
+    },
+    yAxis: {
+        title: {
+            text: 'Ratio'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 0
+        }
+    },
+
+    series: [{
+        name: 'CPI',
+        data: chartPoints['cpi']
+    }, {
+        name: 'SPI',
+        data: chartPoints['spi']
     }],
 
     responsive: {

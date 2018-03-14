@@ -10,12 +10,6 @@ class EvmHistoriesTest < ActiveSupport::TestCase
     assert true
   end
 
-  def test_getScheduledEVM
-    projects = EvmSettings.getScheduledEVMProjectsList()
-    evms = EvmHistories.getScheduledEVM(projects)
-    Rails.logger.debug("My object: #{evms.inspect}")
-  end
-
   def test_getChartPoints
     evmHistories = EvmHistories.where('project_id=?', 1).order('updated_at ASC')
     chartPoints = EvmHistories.getChartPoints(evmHistories)

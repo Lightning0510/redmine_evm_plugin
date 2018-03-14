@@ -26,18 +26,49 @@ class EvmHistories < ActiveRecord::Base
     pvPoints = []
     evPoints = []
     avPoints = []
+    datePoints = []
+    cpiPoints = []
+    spiPoints = []
 
     evmHistories.each do |evm|
       bacPoints.push(evm.bac)
       pvPoints.push(evm.pv)
       evPoints.push(evm.ev)
       avPoints.push(evm.av)
+      datePoints.push(evm.created_at.strftime('%Y%m%d'))
+
+      #spi and cpi
+      cpi = calculate_cpi(evm.ev, evm.av)
+      cpi = EvmCalculator.metric_round(cpi,1)
+
+      spi = calculate_cpi(evm.ev, evm.pv)
+      spi = EvmCalculator.metric_round(spi,1)
+
+      cpiPoints.push(cpi)
+      spiPoints.push(spi)
+
     end
+
     chartPoints['bac'] = bacPoints
     chartPoints['pv'] = pvPoints
     chartPoints['ev'] = evPoints
     chartPoints['av'] = avPoints
+    chartPoints['date'] = datePoints
+    chartPoints['cpi'] = cpiPoints
+    chartPoints['spi'] = spiPoints
 
     chartPoints
+  end
+
+  # CPI
+  def self.calculate_cpi(ev,av)
+      cpi = (ev == NOT_AVAILABLE || av <= 0.0) ? 0.0 : ev/av
+      return cpi
+  end
+
+  # SPI
+  def self.calculate_spi(ev,pv)
+      spi = (ev == NOT_AVAILABLE || pv == NOT_AVAILABLE || pv <= 0.0) ? 0.0 : ev/pv
+      return spi
   end
 end
